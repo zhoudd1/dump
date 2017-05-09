@@ -1,8 +1,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include "drivers/spi_flash.h"
-#include "dump.h"
-#include "project_mapping.h"
+
+#define  DEBUG_DATA_START         705
+#define  DEBUG_DATA_NB_BLOCKS     255
+#define  DEBUG_DATA_ITEM_COUNT    (255*255)
+
+typedef struct {
+  uint32_t  id;    
+  uint32_t  time; 
+  uint16_t  battery_level;
+  uint16_t  battery_vbat;
+  uint16_t  boot_target;
+  uint16_t  wakelock_lock;
+}debug_data_item_t;
 
 static uint32_t spi_flash_get_debug_item_id(void)
 {
