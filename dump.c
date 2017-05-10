@@ -123,9 +123,9 @@ void debug_data_erase_item(uint32_t item_cnt)
 int main(void)
 {
 	time_60s_cnt++;
-	if(((time_60s_cnt % 12) == 0) && (data_is_synchronizing==false)){
-		debug_data_write();
-	}
+
+	if(time_60s_cnt % 12 == 0)	debug_data_write();
+
 	return 0;
 }
 
