@@ -18,52 +18,33 @@ typedef struct {
 static uint32_t spi_flash_get_debug_item_id(void)
 {
 	struct td_device *spi_flash_handler =(struct td_device *)&pf_sba_device_flash_spi0;
-
 	unsigned int retlen;
-
 	uint32_t item_cnt;
-
 	uint32_t spi_addr = DEBUG_DATA_START * SERIAL_FLASH_BLOCK_SIZE;
-
 	spi_flash_read(spi_flash_handler,spi_addr,1,&retlen,&item_cnt);
-
-        if(item_cnt==0xffffffff) return 0;
-          
+        if(item_cnt==0xffffffff) return 0;   
         else return item_cnt;
 }
 
 static void spi_flash_write_debug_item(uint32_t itemOffset,uint8_t itemCount,void *data)
 {
 	struct td_device *spi_flash_handler =(struct td_device *)&pf_sba_device_flash_spi0;
-
-	unsigned int retlen;
-	
+	unsigned int retlen;	
 	DRIVER_API_RC ret = spi_flash_sector_erase(spi_flash_handler, DEBUG_DATA_START, 1);
-
 	uint32_t spi_addr = DEBUG_DATA_START * SERIAL_FLASH_BLOCK_SIZE;
-
-	uint32_t item_offset_v = itemOffset+itemCount;
-	 
-	ret = spi_flash_write(spi_flash_handler, spi_addr, 1,&retlen, &item_offset_v);
-	 
+	uint32_t item_offset_v = itemOffset+itemCount;	 
+	ret = spi_flash_write(spi_flash_handler, spi_addr, 1,&retlen, &item_offset_v);	 
 	spi_addr += SERIAL_FLASH_BLOCK_SIZE * 1 + itemOffset*sizeof(debug_data_item_t);
-
 	ret = spi_flash_write(spi_flash_handler, spi_addr , sizeof(debug_data_item_t)*itemCount/4,&retlen,data);
-
 }
 
 static void spi_flash_read_debug_item(uint32_t itemOffset,uint8_t itemCount, debug_data_item_t *data_read)
 {
 	struct td_device *spi_flash_handler =(struct td_device *)&pf_sba_device_flash_spi0;
-
-	unsigned int retlen;
-	
+	unsigned int retlen;	
 	uint32_t* data_tmp;
-
 	data_tmp = balloc((itemCount) * sizeof(debug_data_item_t), NULL);
-
 	uint32_t spi_addr = DEBUG_DATA_START * SERIAL_FLASH_BLOCK_SIZE;
-
 	spi_addr += SERIAL_FLASH_BLOCK_SIZE * 1 + (itemOffset*sizeof(debug_data_item_t));
 	spi_flash_read(spi_flash_handler, spi_addr ,sizeof(debug_data_item_t)*itemCount/4,&retlen,data_tmp);
 
