@@ -27,10 +27,9 @@ static uint32_t spi_flash_get_debug_item_id(void)
 
 	spi_flash_read(spi_flash_handler,spi_addr,1,&retlen,&item_cnt);
 
-    if(item_cnt==0xffffffff) return 0;
+        if(item_cnt==0xffffffff) return 0;
           
-    else return item_cnt;
-
+        else return item_cnt;
 }
 
 static void spi_flash_write_debug_item(uint32_t itemOffset,uint8_t itemCount,void *data)
